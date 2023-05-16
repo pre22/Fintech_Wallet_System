@@ -12,12 +12,13 @@ from django.urls import reverse_lazy
 
 import sweetify
 
-from users.decorators import authAccessDecorator
-from users.models import CustomUser, Referals
-from users.forms import SignupForm
+from apps.accounts.decorators import authAccessDecorator
+from apps.accounts.models import CustomUser, Referals
+from apps.accounts.forms import SignupForm
 # Create your views here.
 
 env = environ.Env()
+
 
 @authAccessDecorator
 def CustomLoginView(request):
@@ -30,26 +31,31 @@ def CustomLoginView(request):
             if user is not None:
                 login(request, user)
                 if user.is_superuser:
-                    sweetify.success(request,'Login Successful',  text="Welcome Home Admin!!!")
+                    sweetify.success(request, 'Login Successful',
+                                     text="Welcome Home Admin!!!")
                 else:
-                    sweetify.success(request,'Login Successful',  text="You are now logged in")
+                    sweetify.success(request, 'Login Successful',
+                                     text="You are now logged in")
                 return HttpResponseRedirect(reverse_lazy("dashboard"))
-        elif form.is_valid() == False:
+        elif form.is_valid() is False:
             User = get_user_model()
             try:
                 username = form.cleaned_data.get("username")
                 user = User.objects.get(email=username)
-                from_email = config('EMAIL_HOST_USER')
-                sweetify.success(request,"Success", text="Click Activation mail sent to your mail to verify")
+                from_email = env('EMAIL_HOST_USER')
+                sweetify.success(
+                    request, "Success", text="Click Activation mail sent to your mail to verify")
             except User.DoesNotExist:
-                sweetify.error(request,"Error", text="Invalids username or password.")
+                sweetify.error(request, "Error",
+                               text="Invalids username or password.")
         else:
-            sweetify.error(request,"Error", text="Invalid username or password.")
-            
-            
+            sweetify.error(request, "Error",
+                           text="Invalid username or password.")
+
     else:
         form = AuthenticationForm()
     return render(request, "Registration/login.html", {"form": form})
+
 
 @authAccessDecorator
 def SignupView(request):
@@ -58,13 +64,12 @@ def SignupView(request):
 
         if form.is_valid():
             rf = form.instance.referral_code
-  
 
             mail = form.cleaned_data.get("email")
             name = f"{form.cleaned_data.get('first_name')} {form.cleaned_data.get('last_name')}"
             recipient_list = [mail]
             from_email = settings.EMAIL_HOST_USER
-            
+
             domain = request.META['HTTP_HOST']
             subject = "Registration Successful"
             message = f"""
@@ -81,7 +86,8 @@ def SignupView(request):
                 try:
                     CustomUser.objects.get(referral_code=rf)
                 except CustomUser.DoesNotExist:
-                    sweetify.error(request, 'Error', text='Invalid Refferal Code')
+                    sweetify.error(request, 'Error',
+                                   text='Invalid Refferal Code')
 
                 rf_user = CustomUser.objects.get(referral_code=rf)
 
@@ -89,13 +95,12 @@ def SignupView(request):
                     Referals.objects.get(user=rf_user)
                 except Referals.DoesNotExist:
                     Referals.objects.create(user=rf_user)
-                    
+
                 rfm = Referals.objects.get(user=rf_user)
                 rfm.referred_user = f"{form.instance.first_name} {form.instance.last_name}"
                 rfm.referred_email = form.instance.email
                 rfm.save()
 
-            
             return redirect("logins")
         else:
             # print(form.errors)
