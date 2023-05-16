@@ -1,27 +1,30 @@
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
-
-# Permission Decorator
-# Restricts logged in users from accessing the Authentication pages
-def authAccessDecorator(view_func):
-    def wrapper_func(request, *args, **kwargs):
-        if request.user.is_authenticated == True:
-            return redirect(reverse_lazy("dashboard"))
-        else:
-            return view_func(request, *args, **kwargs)
-
-    return wrapper_func
+from django.contrib.auth.base_user import BaseUserManager
+from django.utils.translation import gettext_lazy as _
 
 
-def admin_access_only(view_func):
-    def wrapper_func(request, *args, **kwargs):
-        users = request.user
-        if users.is_authenticated == True:
-            if users.is_superuser == True:
-                return view_func(request, *args, **kwargs)
-            else:
-                return redirect(reverse_lazy("dashboard"))
-        else:
-            return redirect(reverse_lazy("login"))
+class CustomUserManager(BaseUserManager):
+    """
+    Custom user model manager where email is the unique identifiers
+    for authentication instead of usernames.
+    """
 
-    return wrapper_func
+    def create_user(self, email, password=None, **extra_fields):
+        """
+        Create and save a User with the given email and password.
+        """
+        if not email:
+            raise ValueError("User must have an email")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        user = self.create_user(email, password=password, **extra_fields)
+        user.is_active = True
+        user.is_staff = True
+        user.is_admin = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
