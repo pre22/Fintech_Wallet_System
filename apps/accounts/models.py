@@ -54,5 +54,5 @@ class NewsLetter(models.Model):
     subscriber = models.EmailField(max_length=254)
 
     def __str__(self):
-        return self.subscriber
+        return f"{self.subscriber}"
     
