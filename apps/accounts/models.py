@@ -14,13 +14,16 @@ from platform_wallet.managers import CustomUserManager
 class CustomUser(AbstractUser):
     '''Custom User Model'''
 
-    username = None
     uid = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(unique=True, max_length=254)
     date_of_birth = models.DateField(
         _("date of birth"), max_length=150, blank=False)
     slug = models.SlugField(max_length=200, unique=True)
     verified = models.BooleanField(_("verified"), default=False)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
@@ -33,3 +36,6 @@ class CustomUser(AbstractUser):
         if self.first_name and self.last_name:
             return "{} {}".format(self.first_name, self.last_name)
         return self.email
+
+
+class
