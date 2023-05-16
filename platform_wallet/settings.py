@@ -80,8 +80,8 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wallet_project',
-        'USER': 'postgres',
+        'NAME': env('NAME'),
+        'USER': env('USER'),
         'PASSWORD': env('PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
