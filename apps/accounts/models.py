@@ -12,6 +12,7 @@ from platform_wallet.managers import CustomUserManager
 
 
 class CustomUser(AbstractUser):
+    '''Custom User Model'''
 
     username = None
     uid = models.UUIDField(
