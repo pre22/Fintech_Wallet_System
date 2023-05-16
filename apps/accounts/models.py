@@ -46,5 +46,5 @@ class Referals(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} {}".format(self.user.first_name, self.user.last_name)
+        return self.user.slug
 
