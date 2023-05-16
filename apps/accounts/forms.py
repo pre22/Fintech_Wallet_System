@@ -6,15 +6,24 @@ from django.contrib.auth.forms import (
     UserCreationForm
 )
 
-from .models import CustomUser, Referals, NewsLetter
+from .models import (
+    CustomUser,
+    NewsLetter
+)
+
 
 class CustomUserCreationForm(UserCreationForm):
+    '''Custom UserCreationForm'''
     class Meta:
+        '''Meta'''
         model = CustomUser
         fields = UserCreationForm.Meta.fields
 
+
 class CustomUserChangeForm(UserChangeForm):
+    '''Custom UserChangeForm'''
     class Meta:
+        '''Meta'''
         model = CustomUser
         fields = (
             "email",
@@ -25,7 +34,9 @@ class CustomUserChangeForm(UserChangeForm):
             "password",
         )
 
+
 class SignupForm(UserCreationForm):
+    '''Signup Form'''
 
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
@@ -56,7 +67,7 @@ class SignupForm(UserCreationForm):
                 "id": "email",
             }
         )
-        
+
         self.fields["country"].widget.attrs.update(
             {
                 "class": "form-control",
@@ -65,7 +76,7 @@ class SignupForm(UserCreationForm):
                 "id": "country",
             }
         )
-        
+
         self.fields["gender"].widget.attrs.update(
             {
                 "class": "form-control",
@@ -123,6 +134,7 @@ class SignupForm(UserCreationForm):
         )
 
     class Meta(UserCreationForm.Meta):
+        '''Meta'''
 
         model = CustomUser
         fields = (
@@ -142,11 +154,12 @@ class SignupForm(UserCreationForm):
         user = super(SignupForm, self).save(request)
 
         user.is_active = True
-        user.referral_code = "{}-{}".format(self.cleaned_data['first_name'], ''.join(random.choices(string.ascii_uppercase + string.digits, k=8)))
+        user.referral_code = "{}-{}".format(self.cleaned_data['first_name'], ''.join(
+            random.choices(string.ascii_uppercase + string.digits, k=8)))
         # Password Validation
         password1 = self.cleaned_data["password1"]
         password2 = self.cleaned_data["password2"]
-        
+
         if password2 != password1:
             raise forms.ValidationError("Passwords don't match")
 
@@ -157,6 +170,7 @@ class SignupForm(UserCreationForm):
 
 
 class NewsletterForm(forms.ModelForm):
+    '''Harvests user email for newsletter subscription'''
 
     def __init__(self, *args, **kwargs):
         super(NewsletterForm, self).__init__(*args, **kwargs)
