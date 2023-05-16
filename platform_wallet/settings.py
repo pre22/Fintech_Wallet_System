@@ -62,7 +62,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'platform_wallet.wsgi.application'
 
-AUTH_USER_MODEL = "apps.accounts.CustomUser"
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 
 # Database
