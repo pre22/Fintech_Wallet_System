@@ -50,6 +50,7 @@ class Referals(models.Model):
 
 
 class NewsLetter(models.Model):
+    '''Collects email for newsletter'''
     subscriber = models.EmailField(max_length=254)
 
     def __str__(self):
