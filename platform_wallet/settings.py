@@ -62,6 +62,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'platform_wallet.wsgi.application'
 
+AUTH_USER_MODEL = "apps.accounts.CustomUser"
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
