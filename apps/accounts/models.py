@@ -38,4 +38,13 @@ class CustomUser(AbstractUser):
         return self.email
 
 
-class
+class Referals(models.Model):
+    '''Referral Model'''
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    referred_user = models.CharField(max_length=200)
+    referred_email = models.EmailField(max_length=254)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{} {}".format(self.user.first_name, self.user.last_name)
+
