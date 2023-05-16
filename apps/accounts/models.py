@@ -48,3 +48,10 @@ class Referals(models.Model):
     def __str__(self):
         return self.user.slug
 
+
+class NewsLetter(models.Model):
+    subscriber = models.EmailField(max_length=254)
+
+    def __str__(self):
+        return self.subscriber
+    
