@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-z^yj_px*=)v#g4zs+sdu(6^mm*#2%--!ru77re)m#5zfwbc7s&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -68,8 +68,12 @@ WSGI_APPLICATION = 'platform_wallet.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'your_db_name', 
+        'USER': 'postgres',
+        'PASSWORD': 'your_db_password',
+        'HOST': '127.0.0.1', 
+        'PORT': '5432',
     }
 }
 
